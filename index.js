@@ -35,7 +35,6 @@ var start_x='xxxx';
 var hen_installer_bytes=0x48454E00;
 
 var usb_sp='/dev_usb000/4.92/xStorm.p3t';
-var usb_sp='/dev_usb001/4.92/xStorm.p3t';
 var mount_path='/dev_blind';
 var flash_partition='xxxxCELL_FS_IOS:BUILTIN_FLSH1';
 var filesystem='CELL_FS_FAT';
