@@ -1,1 +1,1 @@
-xstorm0.github.io
+[Klik di sini untuk membuka situs saya](https://example.com)
