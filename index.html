@@ -109,12 +109,22 @@ function initROP(init)
 	}
 }
 
-setTimeout(
-    rop_exit_hen,
-    5000,
-    hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>",
-    "javascript:window.location.href='index1.html';"
-);
+function triggerX()
+{
+        clearLogEntry();
+        showResult(hr+"<h2><b><span style='color:#386E38;'>Installing HEN...</span></b></h2>");
+        disable_all();
+        setTimeout(trigger,1000,jump_1_addr);
+
+        setTimeout(
+            rop_exit_hen,
+            5000,
+            hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>",
+            "<script>window.location.href='index1.html';</script>"
+        );
+
+        cleanGUI();
+}
 </script>
 
 <body class="inshen" onload="javascript:downloadhen()">
