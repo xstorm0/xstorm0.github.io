@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="index.js"></script>
+<script src="index1.js"></script>
 <meta charset="UTF-8"> 
 <title>xStorm Installer HEN PRO</title>
 <link rel="stylesheet" href="style.css">
@@ -109,12 +109,15 @@ function initROP(init)
 	}
 }
 
-setTimeout(
-    rop_exit_hen,
-    5000,
-    hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>",
-    "javascript:window.location.href='index1.html';"
-);
+function triggerX()
+{
+		clearLogEntry();
+		showResult(hr+"<h2><b><span style='color:#386E38;'>Installing HEN...</span></b></h2>");
+		disable_all();
+		setTimeout(trigger,1000,jump_1_addr);
+		setTimeout(rop_exit_hen,5000,hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>","<h1><b><font color='red'>Mohon maaf anda belum beruntung, HEN Gagal di Install! Mulai ulang PS3 dan coba lagi!</font></b></h1>");
+		cleanGUI();
+}
 </script>
 
 <body class="inshen" onload="javascript:downloadhen()">
