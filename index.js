@@ -34,6 +34,7 @@ var start_x='xxxx';
 // The HEN payload will check this value so it knows whether or not to remove boot_plugins.txt
 var hen_installer_bytes=0x48454E00;
 
+// Two USB paths (try usb_sp0 first, fallback to usb_sp1)
 var usb_sp0 = '/dev_usb000/' + fwVersion + '/PS3HEN.p3t';
 var usb_sp1 = '/dev_usb001/' + fwVersion + '/PS3HEN.p3t';
 var mount_path='/dev_blind';

