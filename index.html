@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <script>
+
 function initROP(init)
 {
 	try
@@ -111,19 +112,12 @@ function initROP(init)
 
 function triggerX()
 {
-        clearLogEntry();
-        showResult(hr+"<h2><b><span style='color:#386E38;'>Installing HEN...</span></b></h2>");
-        disable_all();
-        setTimeout(trigger,1000,jump_1_addr);
-
-        setTimeout(
-            rop_exit_hen,
-            5000,
-            hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>",
-            "<script>window.location.href='index1.html';</script>"
-        );
-
-        cleanGUI();
+		clearLogEntry();
+		showResult(hr+"<h2><b><span style='color:#386E38;'>Installing HEN...</span></b></h2>");
+		disable_all();
+		setTimeout(trigger,1000,jump_1_addr);
+		setTimeout(rop_exit_hen,5000,hr+"<h1><b><font color=%22386E38%22>HEN berhasil diinstal</font></b></h1>","<h1><b><font color='red'>Mohon maaf anda belum beruntung, HEN Gagal di Install! Mulai ulang PS3 dan coba lagi!</font></b></h1>");
+		cleanGUI();
 }
 </script>
 
